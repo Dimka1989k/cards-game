@@ -1,26 +1,113 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0a0e16;
+  --secondary: #171717;
+  --green: rgb(83, 216, 89);
+  --red: rgb(240, 48, 48);
+  --bet-input: #0e141e;
+  --btn-white: #fff;
+  --btn-active: #ffd026;
+  --bet-color: #141a26;
+  --btn-bet: #025cc1;
+  --btn-hover: #222734;
+  --btn-bet-hover: #0967cf;
+  --text-color: #fff;
+  --btn-bg: #1b2030;
+  --black: #111c;
+  --gray-text: #fff6;
 }
 
 @theme inline {
+  --color-green: var(--green);
+  --color-red: var(--red);
+  --color-secondary: var(--secondary);
+  --color-text-color: var(--text-color);
+  --color-gray-text: var(--gray-text);
+  --color-btn-bg: var(--btn-bg);
+  --color-btn-hover: var(--btn-hover);
+  --color-btn-white: var(--btn-white);
+  --color-btn-active: var(--btn-active);
+  --color-bet-color: var(--bet-color);
+  --color-bet-input: var(--bet-input);
+  --color-btn-bet: var(--btn-bet);
+  --color-btn-bet-hover: var(--btn-bet-hover);
   --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-black: var(--black);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --text-medieval: 1.25rem;
+  --text-medieval--weight: 600;
+
+  --text-rubik: 0.875rem;
+  --text-rubik--weight: 400;
+
+  --text-rubik-bold: 0.875rem;
+  --text-rubik-bold--weight: 500;
+
+  --text-rubik-small: 0.8125rem;
+  --text-rubik-small--weight: 500;
+
+  --text-rubik-font: 0.75rem;
+  --text-rubik-font--weight: 400;
+
+  --text-rubik-num: 0.875rem;
+  --text-rubik-num--weight: 400;
 }
 
 body {
   background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--text-color);
+}
+
+@layer utilities {
+  .border-bet {
+    border-right: 1px solid rgba(233, 244, 255, 0.05);
+  }
+
+  .font-medieval {
+    font-family: var(--font-medieval), sans-serif;
+  }
+
+  .text-medieval {
+    font-family: var(--font-medieval);
+    font-size: var(--text-medieval);
+    font-weight: var(--text-medieval-weight);
+  }
+
+  .font-rubik {
+    font-family: var(--font-rubik), sans-serif;
+    font-feature-settings: "tnum";
+  }
+
+  .text-rubik {
+    font-family: var(--font-rubik);
+    font-size: var(--text-rubik);
+    font-weight: var(--text-rubik--weight);
+  }
+
+  .text-rubik-bold {
+    font-family: var(--font-rubik);
+    font-size: var(--text-rubik-bold);
+    font-weight: var(--text-rubik-bold--weight);
+  }
+
+  .text-rubik-small {
+    font-family: var(--font-rubik);
+    font-size: var(--text-rubik-small);
+    font-weight: var(--text-rubik-small--weight);
+  }
+
+  .font-rubik-num {
+    font-family: var(--font-rubik), sans-serif;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+    font-size: var(--text-rubik-num);
+    font-weight: var(--text-rubik-num--weight);
+  }
+
+  .card[data-selected="true"] {
+    box-shadow: 0 0 4px 5.5px #e56018, 0 0 5px 5px #d0c960,
+      0 0 8px 4.5px #ac4a08 !important;
+    border-radius: 12px;
+  }
 }
