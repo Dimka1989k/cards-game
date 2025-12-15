@@ -21,13 +21,7 @@ export const useMultiplier = () => {
     };
   }, []);
 
-  const finishGame = () => {
-    const timer = window.setTimeout(() => {
-      setGamePhase(GamePhase.shown);
-    }, 1600);
-
-    timersRef.current.push(timer);
-  };
+ const finishGame = () => {};
 
   const startGame = () => {
     setGamePhase(GamePhase.processing);
@@ -51,6 +45,7 @@ const determineResults = useCallback(() => {
   });
 
   setCardResults(results);
+   setGamePhase(GamePhase.shown);
   return results;
 }, [playerCards, hiddenCards, risk, setCardResults]);
 

@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { gameStore } from "@/app/store/gameStore";
+import { GamePhase } from "@/app/types/game.types";
 
 export const Cards = () => {
   const [dragSourceIndex, setDragSourceIndex] = useState<number | null>(null);
@@ -12,9 +13,34 @@ export const Cards = () => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
 
-  const { playerCards, userCardsSwipe } = gameStore();
+  const { playerCards, userCardsSwipe, gamePhase } = gameStore();
+
+
+ const isInteractionEnabled =
+  gamePhase === GamePhase.shown || gamePhase === GamePhase.idle;
+
+
+  useEffect(() => {
+  if (!isInteractionEnabled) {
+    setSelectedIndex(null);
+    setDragSourceIndex(null);
+    setDragTargetIndex(null);
+    setHoveredIndex(null);
+  }
+}, [isInteractionEnabled]);
+
+useEffect(() => {
+  if (gamePhase === GamePhase.processing) {
+    setSelectedIndex(null);
+    setDragSourceIndex(null);
+    setDragTargetIndex(null);
+    setHoveredIndex(null);
+  }
+}, [gamePhase]);
+
 
   const handleCardClick = (index: number) => {
+     if (!isInteractionEnabled) return;
     if (selectedIndex === null) return setSelectedIndex(index);
     if (selectedIndex === index) return setSelectedIndex(null);
     userCardsSwipe(selectedIndex, index);
@@ -22,6 +48,8 @@ export const Cards = () => {
   };
 
   const onDragBegin = (e: React.DragEvent<HTMLDivElement>, index: number) => {
+    if (!isInteractionEnabled) return;
+
     setDragSourceIndex(index);
     e.dataTransfer.effectAllowed = "move";
   };
@@ -30,6 +58,8 @@ export const Cards = () => {
     e: React.DragEvent<HTMLDivElement>,
     index: number
   ) => {
+    if (!isInteractionEnabled) return;
+
     e.preventDefault();
     if (dragSourceIndex !== null && dragSourceIndex !== index) {
       setDragTargetIndex(index);
@@ -40,8 +70,9 @@ export const Cards = () => {
     e: React.DragEvent<HTMLDivElement>,
     dropIndex: number
   ) => {
-    e.preventDefault();
+    if (!isInteractionEnabled) return;
 
+    e.preventDefault();
     if (dragSourceIndex !== null && dragSourceIndex !== dropIndex) {
       userCardsSwipe(dragSourceIndex, dropIndex);
     }
@@ -64,10 +95,16 @@ export const Cards = () => {
             key={cardKey}
             layoutId={card}
             layout
-            draggable
+            draggable={isInteractionEnabled}
             className="relative w-full aspect-[1/2] cursor-pointer rounded-[1.25rem]"
-            onHoverStart={() => setHoveredIndex(index)}
-            onHoverEnd={() => setHoveredIndex(null)}
+            onHoverStart={() => {
+  if (!isInteractionEnabled) return;
+  setHoveredIndex(index);
+}}
+           onHoverEnd={() => {
+  if (!isInteractionEnabled) return;
+  setHoveredIndex(null);
+}}
             onClick={() => handleCardClick(index)}
             onDragStartCapture={(e: React.DragEvent<HTMLDivElement>) =>
               onDragBegin(e, index)
@@ -91,9 +128,15 @@ export const Cards = () => {
             }}
             onMouseLeave={() => setTilt({ x: 0, y: 0 })}
             animate={{
-              scale: isDragging ? 0.92 : isDragOver ? 1.06 : isSelected ? 1 : 1,
-              rotateX: tilt.x,
-              rotateY: tilt.y,
+              scale: isInteractionEnabled
+                ? isDragging
+                  ? 0.92
+                  : isDragOver
+                  ? 1.06
+                  : 1
+                : 1,
+              rotateX: isInteractionEnabled ? tilt.x : 0,
+              rotateY: isInteractionEnabled ? tilt.y : 0,
             }}
             transition={{
               layout: { type: "spring", stiffness: 100, damping: 22 },
@@ -112,7 +155,6 @@ export const Cards = () => {
               }}
               transition={{ duration: 0.25 }}
               style={{
-               
                 borderRadius: "20px",
                 boxShadow: isDragging
                   ? "none"
