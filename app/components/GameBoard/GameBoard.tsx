@@ -27,9 +27,13 @@ export const GameBoard = () => {
         </div>
         <BtnMusic />
       </div>
-      <div className="absolute top-16 left-1/2 -translate-x-1/2 w-full px-6 py-6 flex flex-col max-w-182.5 ">
-        <GridCards />
-        <Cards />
+      <div className="absolute top-16 left-1/2 -translate-x-1/2 w-full px-6 max-sm:py-3 py-6 flex flex-col max-w-182.5 ">
+       
+       <div className="flex flex-col gap-12  max-sm:gap-10">
+         <GridCards />
+         <Cards />
+       </div>
+        
         <MultiplierLabel />
       </div>
     </div>

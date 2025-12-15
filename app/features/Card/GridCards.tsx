@@ -138,7 +138,7 @@ useEffect(() => {
                 ease: "easeOut",
               }}
             >            
-              <div className="absolute inset-0  rounded-[1.25rem] [backface-visibility:hidden] w-full h-50">
+              <div className="absolute inset-0  rounded-[1.25rem] [backface-visibility:hidden] w-full h-50  min-[480px]:max-[590px]:h-30 min-[480px]:max-[591px]:h-30 max-[670px]:h-45 max-[480px]:h-25">   
                 <Image
                   src={backside}
                   alt="backCards"
@@ -146,7 +146,7 @@ useEffect(() => {
                   className="object-cover rounded-[1.25rem]"
                 />
               </div>
-              <div className="absolute inset-0  rounded-[1.25rem] [backface-visibility:hidden] [transform:rotateY(180deg)] w-full h-50">
+              <div className="absolute inset-0  rounded-[1.25rem] [backface-visibility:hidden] [transform:rotateY(180deg)] w-full h-50 min-[480px]:max-[590px]:h-30 max-[670px]:h-45 max-[480px]:h-25">
                 <Image
                   src={front}
                   alt="frontCards"

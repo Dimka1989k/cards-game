@@ -35,7 +35,7 @@
   --color-background: var(--background);
   --color-black: var(--black);
 
-  --text-medieval: 1.25rem;
+  --text-medieval: clamp(8px, 2.2vw, 18px);
   --text-medieval--weight: 600;
 
   --text-rubik: 0.875rem;

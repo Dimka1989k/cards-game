@@ -36,7 +36,7 @@ if (forceLoading) {
 }
 
   return (
-    <div className="flex justify-center min-h-screen w-full">
+    <div className="flex justify-center items-center max-sm:items-start min-h-screen w-full">
       <div className="w-full max-w-262.5 py-5 max-lg:px-5">
         {isDesktop ? (
           <div className="flex w-full">

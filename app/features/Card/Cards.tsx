@@ -51,7 +51,7 @@ export const Cards = () => {
   };
 
   return (
-    <motion.div layout className="flex gap-4 mt-12">
+    <motion.div layout className="flex gap-4">
       {playerCards.map((card, index) => {
         const cardKey = `${card}-${index}`;
         const isDragging = dragSourceIndex === index;
@@ -102,7 +102,7 @@ export const Cards = () => {
             style={{ transformStyle: "preserve-3d" }}
           >
             <motion.div
-              className="absolute inset-0  pointer-events-none w-full h-49.5"
+              className="absolute inset-0  pointer-events-none w-full h-49.5 min-[480px]:max-[590px]:max-h-30 max-[480px]:max-h-25"
               animate={{
                 opacity: isDragging
                   ? 0
@@ -112,7 +112,7 @@ export const Cards = () => {
               }}
               transition={{ duration: 0.25 }}
               style={{
-                height: "200px",
+               
                 borderRadius: "20px",
                 boxShadow: isDragging
                   ? "none"
@@ -123,7 +123,7 @@ export const Cards = () => {
                   : "0 0 4px 5.5px rgb(38, 64, 121)",
               }}
             />
-            <div className="absolute inset-0 rounded-[1.25rem] overflow-hidden z-10 w-full h-50">
+            <div className="absolute inset-0 rounded-[1.25rem] overflow-hidden z-10 w-full h-50 min-[480px]:max-[590px]:max-h-30 max-[480px]:max-h-25">
               <Image
                 src={card}
                 alt={`card ${index}`}
