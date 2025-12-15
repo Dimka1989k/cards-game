@@ -3,7 +3,7 @@ import { GamePhase } from "../types/game.types";
 
 export const DragonType = {
   earth: imageSearch("earth"),
-  empty:imageSearch("empty"),
+  empty: imageSearch("empty"),
   fire: imageSearch("fire"),
   frost: imageSearch("frost"),
   shadow: imageSearch("shadow"),
@@ -18,7 +18,7 @@ export const riskTypes = [
 ];
 
 
-export const bntStatus = (gamePhase: GamePhase) => {
+export const isActionButtonDisabled = (gamePhase: GamePhase) => {
   return !(gamePhase === GamePhase.idle || gamePhase === GamePhase.shown);
 };
 

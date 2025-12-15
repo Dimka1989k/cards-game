@@ -1,6 +1,6 @@
 import { gameStore } from "@/app/store/gameStore";
 import { useMusic } from "@/app/hooks/useMusic";
-import { formatAmount, bntStatus } from "@/app/constants/game.constants";
+import { formatAmount, isActionButtonDisabled } from "@/app/constants/game.constants";
 
 import { SomeMusic } from "@/app/types/game.types";
 import { ChangeEvent, useEffect, useState } from "react";
@@ -14,7 +14,7 @@ export const Bet = () => {
   const { playMusic } = useMusic();
   const maxBet = 1000;
   const [inputValue, setInputValue] = useState( currentBet.toFixed(2));
-  const isDisabled = bntStatus(gamePhase);
+  const isDisabled = isActionButtonDisabled(gamePhase);
 
   const betControlBtns = ["1/2", "x2", "Max"];
 

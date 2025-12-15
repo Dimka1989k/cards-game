@@ -4,6 +4,7 @@ import { Howl } from "howler";
 import { gameStore } from "@/app/store/gameStore";
 import { useEffect, useRef } from "react";
 import { SomeMusic} from "../types/game.types";
+import { useCallback } from "react";
 
 type SoundMap = {
   [key: string]: Howl;
@@ -61,14 +62,17 @@ export const useMusic = () => {
     };
   }, []);
 
-  const playMusic = (nameMusic: SomeMusic) => {
+ const playMusic = useCallback(
+  (nameMusic: SomeMusic) => {
     if (!soundEnabled) return;
 
     const music = musicRef.current[nameMusic];
     if (music) {
       music.play();
     }
-  };
+  },
+  [soundEnabled]
+);
 
   return { playMusic };
 };

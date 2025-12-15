@@ -1,6 +1,6 @@
 import { gameStore } from "@/app/store/gameStore";
 import { useMusic } from "@/app/hooks/useMusic";
-import { bntStatus } from "@/app/constants/game.constants";
+import { isActionButtonDisabled } from "@/app/constants/game.constants";
 import { SomeMusic } from "@/app/types/game.types";
 
 const riskLabels = ["Low", "Medium", "High", "Classic"];
@@ -14,7 +14,7 @@ export const RiskSelectors = () => {
     riskLevel(index);
   };
 
-    const isDisabled = bntStatus(gamePhase);
+    const isDisabled = isActionButtonDisabled(gamePhase);
 
   return (
     <div className="flex flex-col gap-2">

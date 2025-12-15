@@ -4,7 +4,7 @@ import { gameStore } from "@/app/store/gameStore";
 import { useMultiplier } from "@/app/hooks/useMultiplier";
 import { useMusic } from "@/app/hooks/useMusic";
 import { SomeMusic } from "@/app/types/game.types";
-import { bntStatus } from "@/app/constants/game.constants";
+import { isActionButtonDisabled } from "@/app/constants/game.constants";
 import { minBet } from "../../features/Bet/Bet";
 import { motion } from "framer-motion";
 
@@ -14,7 +14,7 @@ export const GameBtn = () => {
   const { playMusic } = useMusic();
 
   const isDisabled =
-    bntStatus(gamePhase) || balance < minBet;
+    isActionButtonDisabled(gamePhase) || balance < minBet;
 
   const handleStartGame = () => {
     if (isDisabled) return;

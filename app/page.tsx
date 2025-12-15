@@ -10,34 +10,16 @@ import { gameStore } from "@/app/store/gameStore";
 
 export default function HomePage() {
   const balance = gameStore((state) => state.balance);
-
   const [isDesktop, setIsDesktop] = useState(false);
   const [forceLoading, setForceLoading] = useState(true);
-  const [loadingProgress, setLoadingProgress] = useState(0);
-
  
-  useEffect(() => {
-    let progress = 0;
+useEffect(() => {
+  const timeout = setTimeout(() => {
+    setForceLoading(false);
+  }, 1000);
 
-    const interval = setInterval(() => {
-      progress += 8;
-      if (progress >= 100) {
-        progress = 100;
-        clearInterval(interval);
-      }
-      setLoadingProgress(progress);
-    }, 20);
-
-    const timeout = setTimeout(() => {
-      setForceLoading(false);
-    }, 1000);
-
-    return () => {
-      clearInterval(interval);
-      clearTimeout(timeout);
-    };
-  }, []);
-
+  return () => clearTimeout(timeout);
+}, []);
 
   useEffect(() => {
     const updateSize = () => {
@@ -49,9 +31,9 @@ export default function HomePage() {
     return () => window.removeEventListener("resize", updateSize);
   }, []);
 
-  if (forceLoading) {
-    return <Loading progress={loadingProgress} />;
-  }
+if (forceLoading) {
+  return <Loading />;
+}
 
   return (
     <div className="flex justify-center min-h-screen w-full">

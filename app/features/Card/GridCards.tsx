@@ -14,6 +14,20 @@ import { useMusic} from "@/app/hooks/useMusic";
 import { motion } from "framer-motion";
 import { imageSearch } from "@/app/helpers/imageSearch";
 
+
+function preloadImage(src: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const img = new window.Image();
+
+    img.onload = () => resolve(src);
+    img.onerror = () =>
+      reject(new Error(`Failed to preload image: ${src}`));
+
+    img.src = src;
+  });
+}
+
+
 export const GridCards = () => {
 
   const { gamePhase, hiddenCards, setHiddenCards, risk, currentBet, increaseBalance } =
@@ -26,70 +40,81 @@ export const GridCards = () => {
   const backside = imageSearch("backface");
 
   useEffect(() => {
-    if (gamePhase !== GamePhase.processing) return;
+  if (gamePhase !== GamePhase.processing) return;
 
-    playMusic(SomeMusic.reveal);
-    setFlipCard(Array(6).fill(false));
+  playMusic(SomeMusic.reveal);
+  setFlipCard(Array(6).fill(false));
 
-    const newCards = playCards();
-    setHiddenCards(newCards);
+  const newCards = playCards();
+  setHiddenCards(newCards);
 
-   
-    const preload = newCards.map(
-      (src) =>
-        new Promise<void>((resolve) => {
-          const img = new window.Image();
-          img.onload = img.onerror = () => resolve();
-          img.src = src;
-        })
-    );
-
-    Promise.all(preload).then(() => {});
-  }, [gamePhase]);
+  Promise.allSettled(newCards.map(preloadImage)).then((results) => {
+    const failed = results.filter(r => r.status === "rejected");
+    if (failed.length) {
+      console.warn(
+        "[GridCards] preload failed:",
+        failed.map(f => f.reason)
+      );
+    }
+  });
+}, [gamePhase, playMusic, setHiddenCards]);
 
 
-  useEffect(() => {
-    if (gamePhase !== GamePhase.open) return;
 
-    [...Array(6)].forEach((_, index) => {
-      setTimeout(() => {
-        playMusic(SomeMusic.flipcard);
-        setFlipCard((prev) => {
-          const arr = [...prev];
-          arr[index] = true;
-          return arr;
-        });
+useEffect(() => {
+  if (gamePhase !== GamePhase.open) return;
 
-       
-        if (index === 5) {
-          setTimeout(() => {
-            const resultGame = determineResults();
+  const timeouts: number[] = [];
 
-            if (resultGame.includes(2) && !resultGame.includes(0)) {
-              playMusic(SomeMusic.reward);
+  for (let index = 0; index < 6; index++) {
+    const flipTimeout = window.setTimeout(() => {
+      playMusic(SomeMusic.flipcard);
 
-              const winMoney = resultGame.reduce((acc, item, idx) => {
-                if (item === 2) acc.push(riskTypes[risk][idx]);
-                return acc;
-              }, [] as number[]);
+      setFlipCard((prev) => {
+        const next = [...prev];
+        next[index] = true;
+        return next;
+      });
 
-              const amount = winMoney.reduce((acc, m) => acc + m * currentBet, 0);
-              increaseBalance(amount);
-            } else {
-              playMusic(SomeMusic.result);
-            }
-          }, 500);
-        }
-      }, index * 350);
-    });
-  }, [gamePhase]);
+      if (index === 5) {
+        window.setTimeout(() => {
+          const resultGame = determineResults();
 
+          if (resultGame.includes(2) && !resultGame.includes(0)) {
+            playMusic(SomeMusic.reward);
+
+            const winMoney = resultGame.reduce((acc, item, idx) => {
+              if (item === 2) acc.push(riskTypes[risk][idx]);
+              return acc;
+            }, [] as number[]);
+
+            const amount = winMoney.reduce(
+              (acc, m) => acc + m * currentBet,
+              0
+            );
+
+            increaseBalance(amount);
+          } else {
+            playMusic(SomeMusic.result);
+          }
+        }, 500);
+      }
+    }, index * 350);
+
+    timeouts.push(flipTimeout);
+  }
+}, [gamePhase, playMusic, determineResults, risk, currentBet, increaseBalance]);
+
+
+useEffect(() => {
+  return () => {
+    setFlipCard([]);
+  };
+}, []);
 
   useEffect(() => {
     if (gamePhase !== GamePhase.finish) return;
-
     playMusic(SomeMusic.flipcard);
-
     setFlipCard(Array(6).fill(false));
   }, [gamePhase]);
 

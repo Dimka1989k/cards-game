@@ -110,4 +110,18 @@ body {
       0 0 8px 4.5px #ac4a08 !important;
     border-radius: 12px;
   }
+
+
+  @keyframes loading-progress {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+.animate-loading-progress {
+  animation: loading-progress 1s linear forwards;
+}
 }

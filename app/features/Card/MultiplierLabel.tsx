@@ -6,7 +6,7 @@ import { useRisk } from "@/app/hooks/useRisk";
 
 export const MultiplierLabel = () => {
   const { myRisk } = useRisk();
-  const [slotMultiplier, setslotMultiplier] = useState<number[]>([]);
+  const [slotMultiplier, setSlotMultiplier] = useState<number[]>([]);
   const [showResultColors, setShowResultColors] = useState(false);
 
   const { gamePhase, cardResults, risk } = gameStore();
@@ -20,7 +20,7 @@ export const MultiplierLabel = () => {
 
   
   useEffect(() => {
-    setslotMultiplier(myRisk(risk));
+    setSlotMultiplier(myRisk(risk));
     setShowResultColors(false);
   }, [risk]);
 

@@ -21,32 +21,39 @@ export const Cards = () => {
     setSelectedIndex(null);
   };
 
-  const onDragBegin = (e: any, index: number) => {
+  const onDragBegin = (e: React.DragEvent<HTMLDivElement>, index: number) => {
     setDragSourceIndex(index);
-    if (e.dataTransfer) e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.effectAllowed = "move";
   };
 
-  const handleDragOver = (e: any, index: number) => {
+  const handleDragOver = (
+    e: React.DragEvent<HTMLDivElement>,
+    index: number
+  ) => {
     e.preventDefault();
     if (dragSourceIndex !== null && dragSourceIndex !== index) {
       setDragTargetIndex(index);
     }
   };
 
-  const onDragRelease = (e: any, dropIndex: number) => {
+  const onDragRelease = (
+    e: React.DragEvent<HTMLDivElement>,
+    dropIndex: number
+  ) => {
     e.preventDefault();
+
     if (dragSourceIndex !== null && dragSourceIndex !== dropIndex) {
       userCardsSwipe(dragSourceIndex, dropIndex);
     }
-   setDragSourceIndex(null);
+
+    setDragSourceIndex(null);
     setDragTargetIndex(null);
   };
 
-
- 
   return (
     <motion.div layout className="flex gap-4 mt-12">
       {playerCards.map((card, index) => {
+        const cardKey = `${card}-${index}`;
         const isDragging = dragSourceIndex === index;
         const isDragOver = dragTargetIndex === index;
         const isSelected = selectedIndex === index;
@@ -54,7 +61,7 @@ export const Cards = () => {
 
         return (
           <motion.div
-            key={card}
+            key={cardKey}
             layoutId={card}
             layout
             draggable
@@ -62,9 +69,15 @@ export const Cards = () => {
             onHoverStart={() => setHoveredIndex(index)}
             onHoverEnd={() => setHoveredIndex(null)}
             onClick={() => handleCardClick(index)}
-            onDragStart={(e) => onDragBegin(e, index)}
-            onDragOver={(e) => handleDragOver(e, index)}
-            onDrop={(e) => onDragRelease(e, index)}
+            onDragStartCapture={(e: React.DragEvent<HTMLDivElement>) =>
+              onDragBegin(e, index)
+            }
+            onDragOverCapture={(e: React.DragEvent<HTMLDivElement>) =>
+              handleDragOver(e, index)
+            }
+            onDropCapture={(e: React.DragEvent<HTMLDivElement>) =>
+              onDragRelease(e, index)
+            }
             onDragEnd={() => {
               setDragSourceIndex(null);
               setDragTargetIndex(null);
@@ -76,24 +89,18 @@ export const Cards = () => {
                 y: ((e.clientX - r.left - r.width / 2) / (r.width / 2)) * 15,
               });
             }}
-            onMouseLeave={() => setTilt({ x: 0, y: 0})}
+            onMouseLeave={() => setTilt({ x: 0, y: 0 })}
             animate={{
-              scale: isDragging
-                ? 0.92
-                : isDragOver
-                ? 1.06
-                : isSelected
-                ? 1
-                : 1,
+              scale: isDragging ? 0.92 : isDragOver ? 1.06 : isSelected ? 1 : 1,
               rotateX: tilt.x,
               rotateY: tilt.y,
-            }}     
+            }}
             transition={{
               layout: { type: "spring", stiffness: 100, damping: 22 },
               duration: 0.25,
             }}
             style={{ transformStyle: "preserve-3d" }}
-          >         
+          >
             <motion.div
               className="absolute inset-0  pointer-events-none w-full h-49.5"
               animate={{
@@ -114,7 +121,7 @@ export const Cards = () => {
                   : isDragOver
                   ? "0 0 4px 5.5px rgb(230, 96, 24)"
                   : "0 0 4px 5.5px rgb(38, 64, 121)",
-              }}         
+              }}
             />
             <div className="absolute inset-0 rounded-[1.25rem] overflow-hidden z-10 w-full h-50">
               <Image
