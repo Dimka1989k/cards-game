@@ -145,7 +145,7 @@ useEffect(() => {
             style={{ transformStyle: "preserve-3d" }}
           >
             <motion.div
-              className="absolute inset-0  pointer-events-none w-full h-49.5 max-[670px]:h-30 max-[480px]:h-25"
+              className="absolute inset-0  pointer-events-none w-full h-49.5 min-[480px]:max-[591px]:h-30 max-[670px]:h-45 max-[480px]:h-25"
               animate={{
                 opacity: isDragging
                   ? 0
@@ -165,7 +165,7 @@ useEffect(() => {
                   : "0 0 4px 5.5px rgb(38, 64, 121)",
               }}
             />
-            <div className="absolute inset-0 rounded-[1.25rem] overflow-hidden z-10 w-full h-50 max-[670px]:h-30 max-[480px]:h-25">
+            <div className="absolute inset-0 rounded-[1.25rem] overflow-hidden z-10 w-full h-50 min-[480px]:max-[591px]:h-30 max-[670px]:h-45 max-[480px]:h-25">
               <Image
                 src={card}
                 alt={`card ${index}`}
